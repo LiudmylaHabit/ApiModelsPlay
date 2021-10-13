@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NbitcOinWagerrPlay2
 {
-    public class CustomTrxModel
+    public class ApiWagerrTransactionModel
     {
         [JsonProperty("blockHash")]
         public string BlockHash { get; set; }

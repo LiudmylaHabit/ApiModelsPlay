@@ -14,7 +14,7 @@ namespace NbitcOinWagerrPlay2
             _request = new RestRequest(method);
         }
 
-        public IRestResponse SendRequest(Dictionary<string, string> headers = null, Dictionary<string, string> parameters)
+        public IRestResponse SendRequest(Dictionary<string, string> headers = null, Dictionary<string, string> parameters = null)
         {
             if (!headers.ContainsKey("content-type")) 
                 headers.Add("content-type", "application/json");

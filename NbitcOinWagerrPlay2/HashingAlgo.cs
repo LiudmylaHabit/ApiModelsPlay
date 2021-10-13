@@ -10,7 +10,7 @@ namespace NbitcOinWagerrPlay2
 {
     public static class HashingAlgo
     {
-        public static void MainHash()
+        public static void MainHash() //Useless method
         {
             //Block 125552
             //https://en.bitcoin.it/wiki/Block_hashing_algorithm

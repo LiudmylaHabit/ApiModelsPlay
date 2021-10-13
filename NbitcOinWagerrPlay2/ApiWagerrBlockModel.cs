@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NbitcOinWagerrPlay2
 {
-    public class CustomBlockModelConverted
+    public class ApiWagerrBlockModel
     {
 		[JsonProperty("block")]
 		public Block Block { get; set; }
