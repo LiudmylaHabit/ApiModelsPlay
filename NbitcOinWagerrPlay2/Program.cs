@@ -53,8 +53,6 @@ namespace NbitcOinWagerrPlay2
 			try
 			{
 			//http://52.224.84.119:55003/
-				 //rpc0 = new NBitcoin.RPC.RPCClient("", "127.0.0.1:18332");
-				 //rpc = new NBitcoin.RPC.RPCClient("test123:test123", uriOne, Network.Main);
 				rpc = new NBitcoin.RPC.RPCClient("", "149.202.56.33:55002", Network.Main);
 				var blpck = rpc.GetBlock(1852102);
 			}
@@ -63,7 +61,8 @@ namespace NbitcOinWagerrPlay2
 			var bitcoinModel = new NBitcoin.Block();
 			try
 			{
-				bitcoinModel = JsonConvert.DeserializeObject<NBitcoin.Block>(response.Content);//JsonConvert.DeserializeObject<WagerrBlock>(response.Content);
+				bitcoinModel = JsonConvert.DeserializeObject<NBitcoin.Block>(response.Content);
+				//JsonConvert.DeserializeObject<WagerrBlock>(response.Content);
 			}
 			catch (Exception) {/*ignored*/ }
 		}
