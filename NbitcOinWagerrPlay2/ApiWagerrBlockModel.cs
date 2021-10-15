@@ -6,54 +6,70 @@ namespace NbitcOinWagerrPlay2
 {
     public class ApiWagerrBlockModel
     {
+		[JsonRequired]
 		[JsonProperty("block")]
 		public Block Block { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("txs")]
 		public List<Tx> Txs { get; set; }
 	}
 
 	public partial class Block
 	{
+		[JsonRequired]
 		[JsonProperty("txs")]
 		public List<string> Txs { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("rpctxs")]
 		public List<Rpctx> Rpctxs { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("_id")]
 		public string Id { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("hash")]
 		public string Hash { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("height")]
 		public long Height { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("bits")]
 		public string Bits { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("confirmations")]
 		public long Confirmations { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("createdAt")]
 		public DateTimeOffset CreatedAt { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("diff")]
 		public string Diff { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("merkle")]
 		public string Merkle { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("nonce")]
 		public long Nonce { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("prev")]
 		public string Prev { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("size")]
 		public long Size { get; set; }
 
+		[JsonRequired]
 		[JsonProperty("ver")]
 		public long Ver { get; set; }
 	}

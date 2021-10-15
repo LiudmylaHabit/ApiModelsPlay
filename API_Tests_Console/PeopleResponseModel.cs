@@ -39,20 +39,27 @@ namespace API_Tests_Console
         [JsonProperty("species")]
         public List<object> Species { get; set; }
 
-        [JsonProperty("vehicles")]
-        public List<string> Vehicles { get; set; }
+       // [JsonProperty("vehicles")]
+      //  public List<string> Vehicles { get; set; }
 
+      //  [JsonRequired]
         [JsonProperty("starships")]
         public List<string> Starships { get; set; }
 
+     //   [JsonRequired]
         [JsonProperty("created")]
         public DateTime Created { get; set; }
 
+      //  [JsonRequired]
         [JsonProperty("edited")]
         public DateTime Edited { get; set; }
 
+        //[JsonRequired]
         [JsonProperty("url")]
         public string Url { get; set; }
+        
+       // [JsonRequired]
+        public string Custom { get; set; }
 
     }
 }

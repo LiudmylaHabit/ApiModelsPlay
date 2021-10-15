@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace API_Tests_Console
 {
@@ -12,6 +13,8 @@ namespace API_Tests_Console
             PeopleResponseModel model = SendRequest();
             PeopleResponseModel expModel = CreateExpectedModel();
             Console.WriteLine(CompareModels(expModel, model));
+            PeopleResponseModel expModel2 = CreateExpectedModel2();
+            Console.WriteLine(CompareModels(expModel2, model));
             Console.Read();
         }
 
@@ -59,7 +62,7 @@ namespace API_Tests_Console
                 BirthYear = "19BBY",
                 Gender = "male",
                 Homeworld = "https://swapi.dev/api/planets/1/",
-                Films = new System.Collections.Generic.List<string>()
+                Films = new List<string>()
                 {
                     "https://swapi.dev/api/films/1/",
                     "https://swapi.dev/api/films/2/",
@@ -67,11 +70,42 @@ namespace API_Tests_Console
                     "https://swapi.dev/api/films/6/"
                 },
                 Species = new List<object>(),
-                Vehicles = new List<string>(),
+              //  Vehicles = new List<string>(),
                 Starships = new List<string>(),
                 Created = DateTime.Parse("2014-12-09T13:50:51.644000Z"),
                 Edited = DateTime.Parse("2014-12-20T21:17:56.891000Z"),
                 Url = "https://swapi.dev/api/people/1/"
+            };
+            return model;
+        }
+
+        private static PeopleResponseModel CreateExpectedModel2()
+        {
+            PeopleResponseModel model = new PeopleResponseModel()
+            {
+                Name = "Luke Skywalker",
+                Height = "172",
+                Mass = "77",
+                HairColor = "blond",
+                SkinColor = "fair",
+                EyeColor = "blue",
+                BirthYear = "19BBY",
+                Gender = "male",
+                Homeworld = "https://swapi.dev/api/planets/1/",
+                Films = new List<string>()
+                {
+                    "https://swapi.dev/api/films/1/",
+                    "https://swapi.dev/api/films/2/",
+                    "https://swapi.dev/api/films/3/",
+                    "https://swapi.dev/api/films/6/"
+                },
+                Species = new List<object>(),
+               // Vehicles = new List<string>(),
+                Starships = new List<string>(),
+                Created = DateTime.Parse("2014-12-09T13:50:51.644000Z"),
+                Edited = DateTime.Parse("2014-12-20T21:17:56.891000Z"),
+                Url = "https://swapi.dev/api/people/1/",
+                Custom = "fv"
             };
             return model;
         }
@@ -85,11 +119,20 @@ namespace API_Tests_Console
             request.AddHeader("content-type", "application/json");
             var response = client.Execute(request);
             PeopleResponseModel respModel = new PeopleResponseModel();
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.MissingMemberHandling = MissingMemberHandling.Error;
             try
             {
-                respModel = JsonConvert.DeserializeObject<PeopleResponseModel>(response.Content);
+                respModel = JsonConvert.DeserializeObject<PeopleResponseModel>(response.Content, jsonSettings);
             }
             catch (Exception) { success = false; }
+            string text = "";
+            try
+            {
+                text = JsonConvert.DeserializeObject<string>(response.Content, jsonSettings);
+            }
+            catch (Exception) { success = false; }
+            var ty = 0;
             return respModel;
         }
 

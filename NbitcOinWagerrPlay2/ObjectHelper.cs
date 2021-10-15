@@ -37,11 +37,17 @@ namespace NbitcOinWagerrPlay2
 
         public static bool CompareModelsGeneric(T expModel, T model)
         {
+            bool vlozhenost = false;
             bool expectedPropertiesExist = true;
             bool actualPropertiesExist = true;
             bool propertiesFormatEquils = true;
             foreach (var prop in expModel.GetType().GetProperties())
             {
+                if (prop.GetType().GetProperties() != null)
+                {
+                    vlozhenost = true;
+                    var propert = prop.GetType().GetProperties();
+                }
                 if (model.GetType().GetProperty(prop.Name) == null)
                 {
                     actualPropertiesExist = false;

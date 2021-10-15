@@ -11,10 +11,17 @@ namespace NbitcOinWagerrPlay2
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            SendGetBlockRequest(1852102); //norm - returned block data (all)
+           // SendAPIGetBlockRequest(1852102); //norm - returned block data (all)
             //SendGetTrxRequest("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
             //SendGetTrxRequestTryies("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
-            //RPCHelper.GetBlockThroughRPC();
+            var block = RPCHelper.GetBlockThroughRPC();
+            // var json = JsonConvert.SerializeObject(block);
+            var js = "";
+            try
+            {
+                js = JsonConvert.SerializeObject(block.Transactions[0]);
+            }
+            catch (Exception) { }
             Console.ReadKey();
         }
 
@@ -66,7 +73,8 @@ namespace NbitcOinWagerrPlay2
             catch (Exception) {/*ignored*/ }
         }
 
-        static void SendGetBlockRequest(int blockNumber)
+
+        static void SendAPIGetBlockRequest(int blockNumber)
         {
             string uri = "https://explorer.wagerr.com/api/block/" + blockNumber;
             RestClient client = new RestClient(uri)
@@ -79,16 +87,18 @@ namespace NbitcOinWagerrPlay2
 
             var response = client.Execute(request);
             ApiWagerrBlockModel model = new ApiWagerrBlockModel();
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.MissingMemberHandling = MissingMemberHandling.Error;
             try
             {
-                model = JsonConvert.DeserializeObject<ApiWagerrBlockModel>(response.Content); //Work correctly
+                model = JsonConvert.DeserializeObject<ApiWagerrBlockModel>(response.Content, jsonSettings); //Work correctly
             }
             catch (Exception ex) {/*ignored*/ }
 
             var bitcoinModel = new NBitcoin.Block();
             try
             {
-                bitcoinModel = JsonConvert.DeserializeObject<NBitcoin.Block>(response.Content);//Empty model
+                bitcoinModel = JsonConvert.DeserializeObject<NBitcoin.Block>(response.Content, jsonSettings);//Empty model
             }
             catch (Exception ex) {/*ignored*/ }
 
@@ -107,10 +117,12 @@ namespace NbitcOinWagerrPlay2
             request.AddHeader("content-type", "application/json");
 
             var response = client.Execute(request);
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.MissingMemberHandling = MissingMemberHandling.Error;
             ApiWagerrTransactionModel model = new ApiWagerrTransactionModel();
             try
             {
-                model = JsonConvert.DeserializeObject<ApiWagerrTransactionModel>(response.Content);
+                model = JsonConvert.DeserializeObject<ApiWagerrTransactionModel>(response.Content, jsonSettings);
             }
             catch (Exception) {/*ignored*/ }
 
@@ -125,7 +137,7 @@ namespace NbitcOinWagerrPlay2
             var bitcoinModel = new NBitcoin.Block();
             try
             {
-                bitcoinModel = JsonConvert.DeserializeObject<NBitcoin.Block>(response.Content);//JsonConvert.DeserializeObject<WagerrBlock>(response.Content);
+                bitcoinModel = JsonConvert.DeserializeObject<NBitcoin.Block>(response.Content, jsonSettings);//JsonConvert.DeserializeObject<WagerrBlock>(response.Content);
             }
             catch (Exception) {/*ignored*/ }
         }
