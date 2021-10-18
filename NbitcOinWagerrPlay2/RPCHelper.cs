@@ -1,5 +1,6 @@
 ﻿using NBitcoin;
 using NBitcoin.RPC;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 
@@ -15,12 +16,11 @@ namespace NbitcOinWagerrPlay2
             return rpcCreds;
         }
 
-        public static NBitcoin.Block GetBlockThroughRPC()
+        public static NBitcoin.Block GetWagerrBlockThroughRPC(int blockNumber)
         {
-			RPCClient rpc;
-            rpc = new RPCClient(new NetworkCredential("admin", "admin"), new Uri("http://52.224.84.119:55003/"), Network.Main);
-
-            return rpc.GetBlock(1852102);
+            RPCClient rpc = new RPCClient(new NetworkCredential("admin", "admin"), 
+                new Uri("http://52.224.84.119:55003/"), WagerrNetworks.Instance.Mainnet);
+            return rpc.GetBlock(blockNumber); // 1852102);
         }
     }
 }
