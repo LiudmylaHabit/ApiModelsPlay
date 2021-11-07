@@ -1,7 +1,11 @@
 ﻿using NBitcoin;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 
 namespace NbitcOinWagerrPlay2
 {
@@ -10,11 +14,67 @@ namespace NbitcOinWagerrPlay2
         //Test through Required and Miss smth
         static void Main(string[] args)
         {
-            SendAPIGetBlockRequest(1852102); //norm - returned block data (all)
-            //SendGetTrxRequest("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
-            //SendGetTrxRequestTryies("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
+          //  SendAPIGetBlockRequest(1852102); //returned block data (all)
+                                             //SendGetTrxRequest("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
+                                             //SendGetTrxRequestTryies("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
+            var manualBlock = ReadJSON();
+            int huhh = 09;
             var block = RPCHelper.GetWagerrBlockThroughRPC(1852102);
+            string blocjParsed = "";
+            List<string> errors = new List<string>();
+            try
+            {
+                blocjParsed = JsonConvert.SerializeObject(block.Header, new JsonSerializerSettings
+                {
+                    Error = delegate (object sender, ErrorEventArgs args)
+                    {
+                        errors.Add(args.ErrorContext.Error.Message);
+                        args.ErrorContext.Handled = true;
+                    },
+                    Converters = { new IsoDateTimeConverter() }
+                });
+            }
+            catch (Exception)
+            {
+                
+            }
+
+            try
+            {
+                blocjParsed = JsonConvert.SerializeObject(block.HeaderOnly, new JsonSerializerSettings
+                {
+                    Error = delegate (object sender, ErrorEventArgs args)
+                    {
+                        errors.Add(args.ErrorContext.Error.Message);
+                        args.ErrorContext.Handled = true;
+                    },
+                    Converters = { new IsoDateTimeConverter() }
+                });
+            }
+            catch (Exception)
+            {
+
+            }
+
+            //Use JSON path to serialize part https://stackoverflow.com/questions/30304128/how-to-perform-partial-object-serialization-providing-paths-using-newtonsoft-j
+
+
+            bool equalMoseld = false;
+            try
+            {
+                equalMoseld = ObjectHelper<NBitcoin.Block>.CompareModelsGeneric(block, block);
+            }
+            catch (Exception) 
+            { 
+            }
+            var hash = block.Transactions[0].Inputs[0].ScriptSig.Hash;
+            var otherBlock = ReadJSON();
+            var witHash = block.Transactions[0].Inputs[0].ScriptSig.WitHash;
+            string hashStr = hash.ToString();
+            string mer = block.Transactions[0].Inputs[0].WitScript.ToString();
             Console.ReadKey();
+            var k = 90;
+            var l = 54;
         }
 
         static void SendAPIGetBlockRequest(int blockNumber)
@@ -31,14 +91,11 @@ namespace NbitcOinWagerrPlay2
             var response = client.Execute(request);
             ApiWagerrBlockModel model = new ApiWagerrBlockModel();
             var jsonSettings = new JsonSerializerSettings();
-            jsonSettings.MissingMemberHandling = MissingMemberHandling.Error;
-            try
-            {
-                model = JsonConvert.DeserializeObject<ApiWagerrBlockModel>(response.Content, jsonSettings); //Work correctly
-            }
-            catch (Exception ex) {/*ignored*/ }
+            jsonSettings.MissingMemberHandling = MissingMemberHandling.Error;   
+            model = JsonConvert.DeserializeObject<ApiWagerrBlockModel>(response.Content, jsonSettings);
 
-            ObjectHelper<ApiWagerrBlockModel>.CompareModelsGeneric(model, new ApiWagerrBlockModel());
+            bool correct = ObjectHelper<ApiWagerrBlockModel>.CompareModelsGeneric(model, new ApiWagerrBlockModel());
+            Console.WriteLine(correct);
         }
 
         static void SendGetTrxRequest(string txNumber)
@@ -69,6 +126,13 @@ namespace NbitcOinWagerrPlay2
                     Network.Main);
             }
             catch (Exception) { }
+        }
+
+        public static WaggerBlockNBitcoinManual ReadJSON()
+        {
+            string expected = "{\"Header\":{\"Bits\": {\"Difficulty\": 16369.263042351435},\"Nonce\": 0,\"HashMerkleRoot\":{\"Size\": 32},\"Version\": 7,\"HashPrevBlock\":{\"Size\": 32},\"BlockTime\": \"9/14/2021 10:11:30 AM +00:00\",\"IsNull\": false, \"NAccumulatorCheckpoint\": {\"Size\": 32}},\"HeaderOnly\": false, \"Transactions\": [{\"RBF\": false, \"Version\": 1,\"TotalOut\": {\"Satoshi\": 0},\"LockTime\": {\"Value\": 0, \"Height\": 0, \"IsHeightLock\": true,\"IsTimeLock\": true}, \"Inputs\": [{\"IsFinal\": true,\"PrevOut\": \"0000000000000000000000000000000000000000000000000000000000000000-4294967295\",\"ScriptSig\": \"c6421c 1d\",\"Sequence\": \"4294967295\", \"WitScript\": \"\"}], \"Outputs\": [{\"ScriptPubKey\": \"\",\"Value\": {\"Satoshi\": 0}}],\"HasWitness\": false,\"IsCoinBase\": true }]}";
+            var block = JsonConvert.DeserializeObject<WaggerBlockNBitcoinManual>(expected);
+            return block;
         }
     }
 }
