@@ -1,7 +1,6 @@
 ﻿using NBitcoin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using RestSharp;
 using System;
@@ -18,8 +17,11 @@ namespace NbitcOinWagerrPlay2
                                              //SendGetTrxRequest("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
                                              //SendGetTrxRequestTryies("960d852781bdabef826617530e0d09444e6d2b806a5c224a9c7667f2cae202ad");
             var manualBlock = ReadJSON();
-            int huhh = 09;
+
             var block = RPCHelper.GetWagerrBlockThroughRPC(1852102);
+
+            bool equal = manualBlock.CheckEquality(block);
+
             string blocjParsed = "";
             List<string> errors = new List<string>();
             try
@@ -73,8 +75,6 @@ namespace NbitcOinWagerrPlay2
             string hashStr = hash.ToString();
             string mer = block.Transactions[0].Inputs[0].WitScript.ToString();
             Console.ReadKey();
-            var k = 90;
-            var l = 54;
         }
 
         static void SendAPIGetBlockRequest(int blockNumber)
